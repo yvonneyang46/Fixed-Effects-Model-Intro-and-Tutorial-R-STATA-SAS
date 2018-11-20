@@ -1,6 +1,6 @@
 ---
-title: "Stat506 G8"
-author: "Chen Xie, Yanlin Yang, Nam Le"
+title: "Fixed effects models"
+author: "Group 8: Chen Xie, Yanlin Yang, Nam H Le"
 date: "11/20/2018"
 output: html_document
 ---
