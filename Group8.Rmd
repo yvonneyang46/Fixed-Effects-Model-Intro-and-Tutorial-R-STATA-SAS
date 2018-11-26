@@ -76,7 +76,7 @@ Cigar[1:10,] %>%
 
 
 
-####Variables: 
+#### Variables: 
 
 The varaibles used for regression and fixed effect model:
 
