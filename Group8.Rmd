@@ -95,6 +95,8 @@ The varaibles used for regression and fixed effect model:
     state (46 levels): state abbreviation.
     
     year (29 levels): the year.
+    
+    
 
 ### Tutorial in R
 
