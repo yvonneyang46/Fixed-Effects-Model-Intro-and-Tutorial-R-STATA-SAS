@@ -1,5 +1,5 @@
 ---
-title: "Fixed effects models"
+title: "Fixed Effects Models"
 author: "Group 8: Chen Xie, Yanlin Yang, Nam H Le"
 date: "`r format.Date(Sys.Date(), '%B %d, %Y')`"
 output: html_document
@@ -9,7 +9,10 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+
+
 ### Introduction to Fixed effects model
+
 
 #### General Description
 
@@ -20,6 +23,7 @@ Generally, data can be grouped according to several observed factors. The group 
 The fixed effect assumption is that the individual-specific effects are correlated with the independent variables. 
 
 The fixed effect models assist in controlling for unobserved heterogeneity when this heterogeneity is constant over time. This heterogeneity can be removed from the data through differencing, for example by taking a first difference which will remove any time invariant components of the model.
+
 
 #### Panel Data
 
@@ -48,6 +52,8 @@ $\beta$ is the $k\times 1$ matrix of parameters.
 $\alpha _{i}$ is the unobserved time-invariant individual effect. 
 
 $\mu_{it}$ is the error term.
+
+
 
 ### Example Dataset: Cigar
 
@@ -95,25 +101,31 @@ The varaibles used for regression and fixed effect model:
     state (46 levels): state abbreviation.
     
     year (29 levels): the year.
-    
-    
 
-### Tutorial in R
+
+
+### Tutorial in R (plm)
 
 ```{r R_code, eval=FALSE}
-## Group Project
-## Stats 506, Fall 2018
-## Updated: November 20th, 2018
 
-# libraries: ------------------------------------------------------------------
 library(plm)
+library(car)
 
 # data: -----------------------------------------------------------------------
 data(Cigar)
 
-# Fixed effects using Least squares dummy variable model
-ols_md = lm(sales ~ price + factor(state) + factor(year) - 1, data = Cigar)
+ols = lm(sales ~ price, data = Cigar)
 summary(ols)
+
+# Fixed effects using Least squares dummy variable model
+ols_fixed = lm(sales ~ price + factor(state) + factor(year) - 1, data = Cigar)
+summary(ols_fixed)
+
+yhat = ols_fixed$fitted.values
+scatterplot(yhat ~ Cigar$price|Cigar$state, boxplots=FALSE, 
+            xlab="price", ylab="yhat", smooth=FALSE)
+
+abline(lm(Cigar$sales~Cigar$price),lwd=3, col="red")
 
 # Use plm package to generate dummie variables for *state* and *year* and fit
 # a model
@@ -124,65 +136,142 @@ fixef(plm)
 ```
 
 
+```{r}
+
+```
+
+
 ### Tutorial in SAS
 
-```{r SAS_code, eval=FALSE}
 
+#### Data Manipulation
+
+Import the data:
+
+```{r sas_1,eval=FALSE}
 proc import datafile=".\Cigar.csv" 
 out=mydata dbms=csv replace; 
 getnames=yes; 
 run;
+```
 
+Transform the variables:
+
+```{r sas_2, eval=FALSE}
+
+# /*change the price, and income with cpi to get the dollar value in 1983 */
 data Cigar; set mydata;
 price_adj = (price/cpi)*100;
 income_adj = (ndi/cpi)*100;
 run;
+```
 
+
+#### OLS regression
+
+```{r sas_3, eval=FALSE}
 proc reg data=Cigar; 
  model sales = price_adj pop pop16 income_adj;
  run;
 quit;
+```
+![](sas_ols.png)
 
+#### Fixed Effects Models
+
+#### Use 'class':
+
+SAS will show the effect of every specific group (every year and every state), but we cannot show the whole output here. We only show the estimated coefficients of independent variables and first five estimated effects for years.
+
+```{r sas_4, eval=FALSE}
 proc glm data=Cigar;
  class year state; 
  model sales = price_adj pop pop16 income_adj year state/ solution; run;
 quit;
-
 ```
+![](sas_fix.png)
+
+#### Use 'absorb':
+
+It we only want to know the estimates of our interests, we can use 'absorb' instead of 'class'. But for our example data, for some reason the output will not be showed.
+
+```{r sas_5, eval=FALSE}
+proc glm data=Cigar;
+ absorb year state; 
+ model sales = price_adj pop pop16 income_adj / solution noint; run;
+quit;
+```
+
 
 
 ### Tutorial in STATA
 
 
-They produce same results. However the first 2 cannot absorb more than 1 fix effect. You have to put factor variable i.var in. That is computationally inefficient since it actually calculate and report coefficient for those dummies. In some cases that could be helpful if you want to see the effect of one specific group. If you just want to control for fix effect and only care about another coef of interest then using reghdfe is the best option
 
+#### Data Manipulation
 
-```{r STATA_code, eval=FALSE}
+Import the data:
 
-// install package reghdfe
-ssc install reghdfe
-ssc install ftools
-// Read data and reduce to needed variables
-
+```{r stata_1,eval=FALSE}
 import delimited Cigar.csv, clear
+```
 
-// Adjust the price, and disposable income with cpi to get the dollar value in 1983
+Transform the variables:
+
+```{r stata_2, eval=FALSE}
+## change the price, and income with cpi to get the dollar value in 1983
 g price_adj = (price/cpi)*100
 g income_adj = (ndi/cpi)*100
-
-// Run regression with areg
-reg sales price_adj pop pop16 income_adj // without fixed effect
-
-
-areg sales price_adj pop pop16 income_adj i.year, absorb(state) // fixed effect
-
-xtset state year
-xtreg sales price_adj pop pop16 income_adj i.year, fe // fixed effect
-
-reghdfe sales price_adj pop pop16 income_adj, absorb(state year) // fixed effect
-// Compute the cross products, sum of squares, and regression coefficients
-
 ```
+
+
+#### OLS regression
+
+```{r stata_3, eval=FALSE}
+reg sales price_adj pop pop16 income_adj
+```
+![](stata_ols.png)
+
+#### Fixed Effects Models
+
+There are three ways to do with STATA, using the commands **areg**, **xtreg**, or **reghdfe**. In fact, they produce the same results.
+
+The **areg** and **xtreg** cannot absorb more than one fix effect, but we can still put factor variable i.var in. Sometimes, they are computationally inefficient since they actually calculate and report coefficients for those dummy variables. However, in some cases they could be helpful if we want to see the effect of one specific group. 
+
+If we just want to control for fix effect and only care about another coefficients of interests, **reghdfe** is the best option.
+
+#####  Command **areg**:
+```{r stata_4,eval=FALSE}
+areg sales price_adj pop pop16 income_adj i.year, absorb(state) 
+```
+![](stata_areg.png)
+
+
+##### Command **xtreg**:
+```{r stata_5,eval=FALSE}
+xtset state year
+xtreg sales price_adj pop pop16 income_adj i.year, fe 
+```
+![](stata_xtreg.png)
+
+##### Command **reghdfe**:
+
+install packages:
+
+```{r stata_6, eval=FALSE}
+ssc install reghdfe
+ssc install ftools
+```
+
+regression: 
+
+```{r stata_7, eval=FALSE}
+reghdfe sales price_adj pop pop16 income_adj, absorb(state year)
+```
+![](stata_reg.png)
+
+
+### Summary and Discussion
 
 
 ### References
@@ -194,3 +283,5 @@ reghdfe sales price_adj pop pop16 income_adj, absorb(state year) // fixed effect
 **STATA Package: ** [reghdfe](http://scorreia.com/demo/reghdfe.html)
 
 **Notes: ** [Panel Data using R](https://www.princeton.edu/~otorres/Panel101R.pdf)
+            
+**Notes: ** [Fixed Effects in SAS](https://kelley.iu.edu/nstoffma/fe.html)
