@@ -315,6 +315,8 @@ reghdfe sales price_adj pop pop16 income_adj, absorb(state year)
 
 **R Package:** [plm](https://cran.r-project.org/web/packages/plm/)
 
+**R Package:**[lfe](https://cran.r-project.org/web/packages/lfe/lfe.pdf)
+
 **STATA Package: ** [reghdfe](http://scorreia.com/demo/reghdfe.html)
 
 **Notes: ** [Panel Data using R](https://www.princeton.edu/~otorres/Panel101R.pdf)
