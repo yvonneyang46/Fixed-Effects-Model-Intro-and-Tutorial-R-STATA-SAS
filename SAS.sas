@@ -1,5 +1,5 @@
 
-proc import datafile="Z:\Desktop\2018FALL\stat506\Cigar.csv" 
+proc import datafile=".\Cigar.csv" 
 out=mydata dbms=csv replace; 
 getnames=yes; 
 run;
