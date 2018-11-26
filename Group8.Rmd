@@ -49,43 +49,52 @@ $\alpha _{i}$ is the unobserved time-invariant individual effect.
 
 $\mu_{it}$ is the error term.
 
-### Dataset used
+### Example Dataset: Cigar
 
 The dataset **Cigar** is a panel of 46 observations from 1963 to 1992 of cigarette consuming.
 
+The total number of observations is 1380.
 
-The total number of observations is 1380
+The panel data **Cigar** looks like this （first 10 observations）:
 
-Variables: 
+```{r data_table1,echo=FALSE,message=FALSE}
 
-A data frame containing :
+library(tidyr)
+library(plm)
+data(Cigar)
 
-state
-state abbreviation
+Cigar[1:10,] %>%
+  knitr::kable( align = 'r')
 
-year
-the year
+```
 
-price
-price per pack of cigarettes
 
-pop
-population
 
-pop16
-population above the age of 16
+####Variables: 
 
-cpi
-consumer price index (1983=100)
+The varaibles used for regression and fixed effect model:
 
-ndi
-per capita disposable income
+  Dependent variable: 
+        
+    sales: cigarette sales in packs per capita.
 
-sales
-cigarette sales in packs per capita
-
-pimin
-minimum price in adjoining states per pack of cigarettes
+  Independent variables (may be transformed): 
+      
+    pop: population.
+                        
+    pop16: population above the age of 16.
+    
+    price: price per pack of cigarettes.
+    
+    cpi: consumer price index (1983=100).
+    
+    ndi: per capita disposable income.
+    
+  Fixed effects variables:
+    
+    state (46 levels): state abbreviation.
+    
+    year (29 levels): the year.
 
 ### Tutorial in R
 
