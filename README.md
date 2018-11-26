@@ -1,15 +1,8 @@
 # 2018STATS506-Group8
 
-## format
+## Fixed Effects Model
 
-## Introduction 
+## author: "Group 8: Chen Xie, Yanlin Yang, Nam H Le"
 
-## Dataset: Cigar.csv
+## R, SAS, STATA
 
-## R
-
-## SAS
-
-## STATA
-
-## Reference 
