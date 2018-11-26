@@ -1,0 +1,183 @@
+---
+title: "Fixed effects models"
+author: "Group 8: Chen Xie, Yanlin Yang, Nam H Le"
+date: "`r format.Date(Sys.Date(), '%B %d, %Y')`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+### Introduction to Fixed effects model
+
+#### General Description
+
+In statistics, a **fixed effects model** is a statistical model in which the model parameters are fixed or non-random quantities.
+
+Generally, data can be grouped according to several observed factors. The group means could be modeled as fixed or random effects for each grouping. In a fixed effects model each group mean is a group-specific fixed quantity.
+
+The fixed effect assumption is that the individual-specific effects are correlated with the independent variables. 
+
+The fixed effect models assist in controlling for unobserved heterogeneity when this heterogeneity is constant over time. This heterogeneity can be removed from the data through differencing, for example by taking a first difference which will remove any time invariant components of the model.
+
+#### Panel Data
+
+In this tutorial, we will focus on fixed effects model with panel data. 
+
+Panel data (also known as longitudinal or cross-sectional time-series data) is a dataset in which the behavior of entities
+are observed across time.The entities could be states, companies, individuals, countries, etc.
+
+In panel data, fixed effects represent the subject-specific means. In panel data analysis the term fixed effects estimator is used to refer to an estimator for the coefficients in the regression model including those fixed effects (one time-invariant intercept for each subject).
+
+
+#### Classical Representation
+
+The linear unobserved effects model for $N$ observations and $T$ time periods:
+
+$$y_{it}=X_{it}\beta+\alpha_i+\mu_{it} ,\ for \ t=1,..,T \ and \  i=1,...,N$$
+
+Where:
+
+$y_{it}$ is the dependent variable observed for individual i at time t.
+
+$X_{it}$ is the time-variant $T\times k$ (the number of independent variables) regressor matrix.
+
+$\beta$ is the $k\times 1$ matrix of parameters.
+
+$\alpha _{i}$ is the unobserved time-invariant individual effect. 
+
+$\mu_{it}$ is the error term.
+
+### Dataset used
+
+The dataset **Cigar** is a panel of 46 observations from 1963 to 1992 of cigarette consuming.
+
+
+The total number of observations is 1380
+
+Variables: 
+
+A data frame containing :
+
+state
+state abbreviation
+
+year
+the year
+
+price
+price per pack of cigarettes
+
+pop
+population
+
+pop16
+population above the age of 16
+
+cpi
+consumer price index (1983=100)
+
+ndi
+per capita disposable income
+
+sales
+cigarette sales in packs per capita
+
+pimin
+minimum price in adjoining states per pack of cigarettes
+
+### Tutorial in R
+
+```{r R_code, eval=FALSE}
+## Group Project
+## Stats 506, Fall 2018
+## Updated: November 20th, 2018
+
+# libraries: ------------------------------------------------------------------
+library(plm)
+
+# data: -----------------------------------------------------------------------
+data(Cigar)
+
+# Fixed effects using Least squares dummy variable model
+ols_md = lm(sales ~ price + factor(state) + factor(year) - 1, data = Cigar)
+summary(ols)
+
+# Use plm package to generate dummie variables for *state* and *year* and fit
+# a model
+plm_md = plm(sales ~ price - 1, data = Cigar,
+          index = c("state","year"), model = "within")
+summary(plm)
+fixef(plm)
+```
+
+
+### Tutorial in SAS
+
+```{r SAS_code, eval=FALSE}
+
+proc import datafile=".\Cigar.csv" 
+out=mydata dbms=csv replace; 
+getnames=yes; 
+run;
+
+data Cigar; set mydata;
+price_adj = (price/cpi)*100;
+income_adj = (ndi/cpi)*100;
+run;
+
+proc reg data=Cigar; 
+ model sales = price_adj pop pop16 income_adj;
+ run;
+quit;
+
+proc glm data=Cigar;
+ class year state; 
+ model sales = price_adj pop pop16 income_adj year state/ solution; run;
+quit;
+
+```
+
+
+### Tutorial in STATA
+
+
+They produce same results. However the first 2 cannot absorb more than 1 fix effect. You have to put factor variable i.var in. That is computationally inefficient since it actually calculate and report coefficient for those dummies. In some cases that could be helpful if you want to see the effect of one specific group. If you just want to control for fix effect and only care about another coef of interest then using reghdfe is the best option
+
+
+```{r STATA_code, eval=FALSE}
+
+// install package reghdfe
+ssc install reghdfe
+ssc install ftools
+// Read data and reduce to needed variables
+
+import delimited Cigar.csv, clear
+
+// Adjust the price, and disposable income with cpi to get the dollar value in 1983
+g price_adj = (price/cpi)*100
+g income_adj = (ndi/cpi)*100
+
+// Run regression with areg
+reg sales price_adj pop pop16 income_adj // without fixed effect
+
+
+areg sales price_adj pop pop16 income_adj i.year, absorb(state) // fixed effect
+
+xtset state year
+xtreg sales price_adj pop pop16 income_adj i.year, fe // fixed effect
+
+reghdfe sales price_adj pop pop16 income_adj, absorb(state year) // fixed effect
+// Compute the cross products, sum of squares, and regression coefficients
+
+```
+
+
+### References
+
+**Wikipedia:** [Fixed effects model](https://en.wikipedia.org/wiki/Fixed_effects_model/)
+
+**R Package:** [plm](https://cran.r-project.org/web/packages/plm/)
+
+**Notes: ** [Panel Data using R](https://www.princeton.edu/~otorres/Panel101R.pdf)
