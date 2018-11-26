@@ -22,3 +22,9 @@ proc glm data=Cigar;
  class year state; 
  model sales = price_adj pop pop16 income_adj year state/ solution; run;
 quit;
+
+proc glm data=Cigar;
+ absorb state; 
+ class year;
+ model sales = price_adj pop pop16 income_adj year/ solution noint; run;
+quit;
