@@ -38,6 +38,6 @@ summary(felm_fixed)
 plm_md = plm(sales ~ price_adj + pop + pop16 + income_adj, 
              data = Cigar,
           index = c("year", "state"), model = "within", effect = "twoways")
-print(plm_md)
+summary(plm_md)
 
 
