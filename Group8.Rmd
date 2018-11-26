@@ -106,38 +106,82 @@ The varaibles used for regression and fixed effect model:
 
 ### Tutorial in R (plm)
 
-```{r R_code, eval=FALSE}
-
+```{r R_code, message=FALSE}
+# libraries: 
 library(plm)
 library(car)
-
-# data: -----------------------------------------------------------------------
-data(Cigar)
-
-ols = lm(sales ~ price, data = Cigar)
-summary(ols)
-
-# Fixed effects using Least squares dummy variable model
-ols_fixed = lm(sales ~ price + factor(state) + factor(year) - 1, data = Cigar)
-summary(ols_fixed)
-
-yhat = ols_fixed$fitted.values
-scatterplot(yhat ~ Cigar$price|Cigar$state, boxplots=FALSE, 
-            xlab="price", ylab="yhat", smooth=FALSE)
-
-abline(lm(Cigar$sales~Cigar$price),lwd=3, col="red")
-
-# Use plm package to generate dummie variables for *state* and *year* and fit
-# a model
-plm_md = plm(sales ~ price - 1, data = Cigar,
-          index = c("state","year"), model = "within")
-summary(plm)
-fixef(plm)
+library(lfe)
 ```
 
 
-```{r}
 
+#### Data Manipulation
+
+Import the data:
+
+```{r R_code_1}
+# data: 
+data(Cigar)
+```
+
+Transform the variables:
+
+```{r R_code_2,message=FALSE}
+# Adjust the price, and disposable income with cpi to 
+# get the dollar value in 1983
+attach(Cigar)
+Cigar$price_adj=(price/cpi)*100
+Cigar$income_adj = (ndi/cpi)*100
+```
+
+
+#### OLS regression
+
+```{r R_code_3}
+# Run ordinary linear regression without fixed effect
+ols = lm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar)
+summary(ols)
+```
+
+#### Fixed Effects Models
+
+There are three ways to do with R, using the regular commands **lm**, the **felm** command in the lfe package, or **plm** in the plm package. In fact, they produce the same results. 
+
+The **lm** generates dummies variables for *state* and *year* and then run linear regression. And the **felm** and **plm** will absorb the estimates of specific groups. 
+
+If we just want to control for fix effect and only care about another coefficients of interests, either **felm** and **plm** is a good choice. But if if we want to know the effect of some specific groups, **lm** is preferred. 
+
+#### The **lm**:
+
+```{r R_code_4}
+# Fixed effects using Least squares dummy variable model
+ols_fixed = lm(sales ~ price_adj + 
+                 pop + pop16 + income_adj +
+                 factor(year) + factor(state), data = Cigar)
+summary(ols_fixed)
+```
+
+
+#### The **felm**:
+
+```{r R_code_5}
+# Using lfe package to generate dummies variables for *state* and *year* and fit
+# a model 
+felm_fixed = felm(sales ~ price_adj + 
+                  pop + pop16 + income_adj |
+                  factor(year) + factor(state), data = Cigar)
+summary(felm_fixed)
+```
+
+#### The **plm**:
+
+```{r R_code_6}
+# Use plm package to generate dummie variables for *state* and *year* and fit
+# a model
+plm_md = plm(sales ~ price_adj + pop + pop16 + income_adj, 
+             data = Cigar,
+          index = c("year", "state"), model = "within", effect = "twoways")
+summary(plm_md)
 ```
 
 
@@ -179,7 +223,7 @@ quit;
 
 #### Fixed Effects Models
 
-#### Use 'class':
+#### Use **class**:
 
 SAS will show the effect of every specific group (every year and every state), but we cannot show the whole output here. We only show the estimated coefficients of independent variables and first five estimated effects for years.
 
@@ -191,17 +235,20 @@ quit;
 ```
 ![](sas_fix.png)
 
-#### Use 'absorb':
+#### Use **absorb**:
 
-It we only want to know the estimates of our interests, we can use 'absorb' instead of 'class'. But for our example data, for some reason the output will not be showed.
+It we only want to know the estimates of our interests, we can use 'absorb' instead of 'class'. But it can only absorb one variable at a time.
+
+We only show the estimated coefficients of independent variables and first five estimated effects for years.
 
 ```{r sas_5, eval=FALSE}
 proc glm data=Cigar;
- absorb year state; 
- model sales = price_adj pop pop16 income_adj / solution noint; run;
+ absorb state; 
+ class year;
+ model sales = price_adj pop pop16 income_adj year/ solution noint; run;
 quit;
 ```
-
+![](sas_abs.png)
 
 
 ### Tutorial in STATA
