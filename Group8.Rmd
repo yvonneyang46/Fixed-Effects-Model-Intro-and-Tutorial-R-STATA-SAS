@@ -33,7 +33,7 @@ The fixed effect models assist in controlling for unobserved heterogeneity when 
 In this tutorial, we will focus on fixed effects model with panel data. 
 
 Panel data (also known as longitudinal or cross-sectional time-series data) is a dataset in which the behavior of entities
-are observed across time.The entities could be states, companies, individuals, countries, etc.
+are observed across time. The entities could be states, companies, individuals, countries, etc.
 
 In panel data, fixed effects represent the subject-specific means. In panel data analysis the term fixed effects estimator is used to refer to an estimator for the coefficients in the regression model including those fixed effects (one time-invariant intercept for each subject).
 
