@@ -360,6 +360,8 @@ When computing fixed effects models estimates, we should choose to absorb them o
 
 **R Package:** [plm](https://cran.r-project.org/web/packages/plm/)
 
+**R Package:** [lfe](https://cran.r-project.org/web/packages/lfe/lfe.pdf)
+
 **STATA Package: ** [reghdfe](http://scorreia.com/demo/reghdfe.html)
 
 **Notes: ** [Panel Data using R](https://www.princeton.edu/~otorres/Panel101R.pdf)
