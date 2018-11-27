@@ -17,6 +17,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ### Introduction 
 
 
+
 #### General Description
 
 In statistics, a **fixed effects model** is a statistical model in which the model parameters are fixed or non-random quantities.
@@ -79,7 +80,7 @@ Cigar[1:10,] %>%
 
 
 
-####Variables: 
+#### Variables: 
 
 The varaibles used for regression and fixed effect model:
 
@@ -104,8 +105,32 @@ The varaibles used for regression and fixed effect model:
     state (46 levels): state abbreviation.
     
     year (29 levels): the year.
+    
+
+#### Why Fixed Effects Models
 
 
+##### Heterogeneity across year 
+
+```{r fix_1,message=FALSE,warning=FALSE, echo=FALSE}
+
+library(foreign)
+library(gplots)
+plotmeans(sales~ year, main="Heterogeineity across year", data=Cigar,n.label = FALSE)
+
+```
+
+
+##### Heterogeneity across state
+
+```{r fix_2,message=FALSE,warning=FALSE,echo=FALSE}
+plotmeans(sales~ state, main="Heterogeineity across state", data=Cigar,n.label = FALSE)
+detach("package:gplots")
+detach("package:foreign")
+```
+
+
+So Fixed Effects Models help to control these heterogeneities.
 
 ### Tutorial in R {.tabset}
 
