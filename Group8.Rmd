@@ -2,7 +2,10 @@
 title: "Fixed Effects Models"
 author: "Group 8: Chen Xie, Yanlin Yang, Nam H Le"
 date: "`r format.Date(Sys.Date(), '%B %d, %Y')`"
-output: html_document
+output:
+  html_document:
+    toc: yes
+    toc_float: yes
 ---
 
 ```{r setup, include=FALSE}
@@ -11,7 +14,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 
-### Introduction to Fixed effects model
+### Introduction 
 
 
 #### General Description
@@ -55,7 +58,7 @@ $\mu_{it}$ is the error term.
 
 
 
-### Example Dataset: Cigar
+### Example Dataset: Cigar 
 
 The dataset **Cigar** is a panel of 46 observations from 1963 to 1992 of cigarette consuming.
 
@@ -104,7 +107,7 @@ The varaibles used for regression and fixed effect model:
 
 
 
-### Tutorial in R 
+### Tutorial in R {.tabset}
 
 
 #### Data Manipulation
@@ -136,7 +139,7 @@ ols = lm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar)
 summary(ols)
 ```
 
-#### Fixed Effects Models
+#### Fixed Effects Models {.tabset}
 
 There are three ways to do with R, using the regular funtions **lm**, the **felm** in the **lfe** package, or **plm** in the **plm** package. In fact, they produce the same results. 
 
@@ -176,7 +179,7 @@ summary(plm_md)
 ```
 
 
-### Tutorial in SAS
+### Tutorial in SAS {.tabset}
 
 
 #### Data Manipulation
@@ -212,7 +215,7 @@ quit;
 ```
 ![](sas_ols.png)
 
-#### Fixed Effects Models
+#### Fixed Effects Models {.tabset}
 
 In SAS, the **glm** is to fit with fixed effects models. In **glm**, we can either use **class** or **absorb** to determine the fixed effects variables. 
 
@@ -248,7 +251,7 @@ quit;
 ![](sas_abs.png)
 
 
-### Tutorial in STATA
+### Tutorial in STATA {.tabset}
 
 
 
@@ -276,7 +279,7 @@ reg sales price_adj pop pop16 income_adj
 ```
 ![](stata_ols.png)
 
-#### Fixed Effects Models
+#### Fixed Effects Models {.tabset}
 
 There are three ways to do with STATA, using the commands **areg**, **xtreg**, or **reghdfe**. In fact, they produce the same results.
 
