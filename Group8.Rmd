@@ -59,7 +59,7 @@ $\mu_{it}$ is the error term.
 
 ### Overview
 
-In this tutorial, we use R, SAS and STATA to fit the fixed effect models and compared them with the ordinary linear regression models. 
+In this tutorial, we will use R, SAS and STATA to fit the fixed effect models and compared them with the ordinary linear regression models. 
 
 The packages we use in R are basic R, **lfe** and **plm**. The package we use in STATA is **glm**, and two different commands, **class** or **absorb**, are both showed. In STATA, we use the packages **areg**, **xtreg**, and **reghdfe** to do the regression.
 
