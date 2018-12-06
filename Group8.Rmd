@@ -67,7 +67,7 @@ The total number of observations is 1380.
 
 The panel data **Cigar** looks like this （first 10 observations）:
 
-```{r data_table1,echo=FALSE,message=FALSE}
+```{r data_table1,echo=FALSE,message=FALSE,warning=FALSE}
 
 library(tidyr)
 library(plm)
@@ -357,6 +357,8 @@ When computing fixed effects models estimates, we should choose to absorb them o
 ### References
 
 **Wikipedia:** [Fixed effects model](https://en.wikipedia.org/wiki/Fixed_effects_model/)
+
+**Dataset Cigar** [Cigar](http://www-eio.upc.edu/~pau/cms/rdata/csv/Ecdat/Cigar.csv)
 
 **R Package:** [plm](https://cran.r-project.org/web/packages/plm/)
 
