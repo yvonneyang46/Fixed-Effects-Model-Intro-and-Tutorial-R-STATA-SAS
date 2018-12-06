@@ -164,6 +164,8 @@ Cigar$income_adj = (ndi/cpi)*100
 
 #### OLS regression
 
+Fit an OLS regression model with *sale* as the response and *price_adj*, *pop*, *pop16* and *income_adj* as predictors:
+
 ```{r R_code_3}
 # Run ordinary linear regression without fixed effect
 ols = lm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar)
@@ -171,6 +173,8 @@ summary(ols)
 ```
 
 #### Fixed Effects Models {.tabset}
+
+We fit a fixed effects model with *sale* as the response, *price_adj*, *pop*, *pop16* and *income_adj* as independent variables, and *state* and *year* as fixed effects variables.
 
 There are three ways to do with R, using the regular funtions **lm**, the **felm** in the **lfe** package, or **plm** in the **plm** package. In fact, they produce the same results. 
 
@@ -202,7 +206,7 @@ summary(felm_fixed)
 
 
 ```{r R_code_6, warning=FALSE,message=FALSE}
-# Use plm package tfor *state* and *year* and fit a model
+# Use plm package for *state* and *year* and fit a model
 library(plm)
 plm_md = plm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar,
           index = c("year", "state"), model = "within", effect = "twoways")
