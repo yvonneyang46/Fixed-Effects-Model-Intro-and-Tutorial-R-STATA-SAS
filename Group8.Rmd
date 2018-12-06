@@ -59,6 +59,12 @@ $\mu_{it}$ is the error term.
 
 ### Overview
 
+In this tutorial, we will use R, SAS and STATA to fit the fixed effect models and compared them with the ordinary linear regression models. 
+
+The packages we use in R are basic R, **lfe** and **plm**. The package we use in STATA is **glm**, and two different commands, **class** or **absorb**, are both showed. In STATA, we use the packages **areg**, **xtreg**, and **reghdfe** to do the regression.
+
+The dataset **Cigar** is a built-in dataset in the **plm** package in R. It is clean enough for us to do the data analysis directly.
+
 ### Example Dataset: Cigar 
 
 The dataset **Cigar** is a panel of 46 observations from 1963 to 1992 of cigarette consuming.
@@ -158,13 +164,19 @@ Cigar$income_adj = (ndi/cpi)*100
 
 #### OLS regression
 
+Fit an OLS regression model with *sale* as the response and *price_adj*, *pop*, *pop16* and *income_adj* as predictors:
+
 ```{r R_code_3}
 # Run ordinary linear regression without fixed effect
 ols = lm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar)
 summary(ols)
 ```
 
+From the summary above, we see that the coefficient for *price_adj*, *pop*, *pop16* and *income_adj* are -1.247e+00, 1.040e-02, -1.495e-02,  5.278e-03 respectively.
+
 #### Fixed Effects Models {.tabset}
+
+We fit a fixed effects model with *sale* as the response, *price_adj*, *pop*, *pop16*, *income_adj* as independent variables, and *state* and *year* as fixed effects variables.
 
 There are three ways to do with R, using the regular funtions **lm**, the **felm** in the **lfe** package, or **plm** in the **plm** package. In fact, they produce the same results. 
 
@@ -186,7 +198,7 @@ summary(ols_fixed)$coefficients[1:10,]
 ##### Package **lfe**:
 
 ```{r R_code_5,warning=FALSE,message=FALSE}
-# Using lfe package for *state* and *year* as fixed effects variables and fit a model 
+# Use lfe package, treat *state* and *year* as fixed effects variables, and fit a model 
 library(lfe)
 felm_fixed = felm(sales ~ price_adj + pop + pop16 + income_adj |factor(year) + factor(state), data = Cigar)
 summary(felm_fixed)
@@ -196,7 +208,7 @@ summary(felm_fixed)
 
 
 ```{r R_code_6, warning=FALSE,message=FALSE}
-# Use plm package tfor *state* and *year* as fixed effects variables and fit a model
+# Use plm package, treat *state* and *year* as fixed effects variables, and fit a model
 library(plm)
 plm_md = plm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar,
           index = c("year", "state"), model = "within", effect = "twoways")
