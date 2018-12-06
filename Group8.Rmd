@@ -140,7 +140,7 @@ So Fixed Effects Models help to control these heterogeneities.
 Import the data:
 
 ```{r R_code_1}
-# data: the dataset 'Cigar' is the 'plm' package
+# data: the dataset 'Cigar' is available inside the 'plm' package
 library(plm)
 data(Cigar)
 ```
@@ -186,7 +186,7 @@ summary(ols_fixed)$coefficients[1:10,]
 ##### Package **lfe**:
 
 ```{r R_code_5,warning=FALSE,message=FALSE}
-# Using lfe package for *state* and *year* and fit a model 
+# Using lfe package for *state* and *year* as fixed effects variables and fit a model 
 library(lfe)
 felm_fixed = felm(sales ~ price_adj + pop + pop16 + income_adj |factor(year) + factor(state), data = Cigar)
 summary(felm_fixed)
@@ -196,7 +196,7 @@ summary(felm_fixed)
 
 
 ```{r R_code_6, warning=FALSE,message=FALSE}
-# Use plm package tfor *state* and *year* and fit a model
+# Use plm package tfor *state* and *year* as fixed effects variables and fit a model
 library(plm)
 plm_md = plm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar,
           index = c("year", "state"), model = "within", effect = "twoways")
