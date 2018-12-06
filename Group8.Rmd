@@ -20,13 +20,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 #### General Description
 
-In statistics, a **fixed effects model** is a statistical model in which the model parameters are fixed or non-random quantities.
+In statistics, a model that has fixed parameters or non-random quantities is called **fixed effects model**.
 
-Generally, data can be grouped according to several observed factors. The group means could be modeled as fixed or random effects for each grouping. In a fixed effects model each group mean is a group-specific fixed quantity.
+In general, based on some observed factors, data can be divided into groups. The group means could be assumed as constant or non-constant across groups. And in a fixed effects model, just as its name implies, each group mean is a specifically fixed quantity.
 
-The fixed effect assumption is that the individual-specific effects are correlated with the independent variables. 
+Futhermore, the assumption of fixed effect is that the group-specific effects are correlated with the independent variables. 
 
-The fixed effect models assist in controlling for unobserved heterogeneity when this heterogeneity is constant over time. This heterogeneity can be removed from the data through differencing, for example by taking a first difference which will remove any time invariant components of the model.
+Thus, in the fixed effect models, if the heterogeneity is fixed over time, this unobserved heterogeneity can be controlled. This heterogeneity is removable from the data by differencing, for instance, any time invariant components of the model can be taken away by taking a first difference.
 
 
 #### Panel Data
@@ -36,7 +36,7 @@ In this tutorial, we will focus on fixed effects model with panel data.
 Panel data (also known as longitudinal or cross-sectional time-series data) is a dataset in which the behavior of entities
 are observed across time. The entities could be states, companies, individuals, countries, etc.
 
-In panel data, fixed effects represent the subject-specific means. In panel data analysis the term fixed effects estimator is used to refer to an estimator for the coefficients in the regression model including those fixed effects (one time-invariant intercept for each subject).
+In panel data, fixed effects represent the group-specific means. In panel data analysis the term fixed effects estimator is used to refer to an estimator for the coefficients in the regression model including those fixed effects (one time-invariant intercept for each subject).
 
 
 #### Classical Representation
@@ -58,12 +58,6 @@ $\alpha _{i}$ is the unobserved time-invariant individual effect.
 $\mu_{it}$ is the error term.
 
 ### Overview
-
-In this tutorial, we will use R, SAS and STATA to fit the fixed effect models and compared them with the ordinary linear regression models. 
-
-The packages we use in R are basic R, **lfe** and **plm**. The package we use in STATA is **glm**, and two different commands, **class** or **absorb**, are both showed. In STATA, we use the packages **areg**, **xtreg**, and **reghdfe** to do the regression.
-
-The dataset **Cigar** is a built-in dataset in the **plm** package in R. It is clean enough for us to do the data analysis directly.
 
 ### Example Dataset: Cigar 
 
@@ -122,7 +116,7 @@ The varaibles used for regression and fixed effect model:
 
 library(foreign)
 library(gplots)
-plotmeans(sales~ year, main="Heterogeineity across year", data=Cigar,n.label = FALSE)
+plotmeans(sales~ year, main="Heterogeneity across year", data=Cigar,n.label = FALSE)
 
 ```
 
@@ -130,7 +124,7 @@ plotmeans(sales~ year, main="Heterogeineity across year", data=Cigar,n.label = F
 ##### Heterogeneity across state
 
 ```{r fix_2,message=FALSE,warning=FALSE,echo=FALSE}
-plotmeans(sales~ state, main="Heterogeineity across state", data=Cigar,n.label = FALSE)
+plotmeans(sales~ state, main="Heterogeneity across state", data=Cigar,n.label = FALSE)
 detach("package:gplots")
 detach("package:foreign")
 ```
@@ -164,8 +158,6 @@ Cigar$income_adj = (ndi/cpi)*100
 
 #### OLS regression
 
-Fit an OLS regression model with *sale* as the response and *price_adj*, *pop*, *pop16* and *income_adj* as predictors:
-
 ```{r R_code_3}
 # Run ordinary linear regression without fixed effect
 ols = lm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar)
@@ -173,8 +165,6 @@ summary(ols)
 ```
 
 #### Fixed Effects Models {.tabset}
-
-We fit a fixed effects model with *sale* as the response, *price_adj*, *pop*, *pop16* and *income_adj* as independent variables, and *state* and *year* as fixed effects variables.
 
 There are three ways to do with R, using the regular funtions **lm**, the **felm** in the **lfe** package, or **plm** in the **plm** package. In fact, they produce the same results. 
 
@@ -206,7 +196,7 @@ summary(felm_fixed)
 
 
 ```{r R_code_6, warning=FALSE,message=FALSE}
-# Use plm package for *state* and *year* and fit a model
+# Use plm package tfor *state* and *year* and fit a model
 library(plm)
 plm_md = plm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar,
           index = c("year", "state"), model = "within", effect = "twoways")
