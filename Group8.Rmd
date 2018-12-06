@@ -61,7 +61,7 @@ $\mu_{it}$ is the error term.
 
 In this tutorial, we will use R, SAS and STATA to fit the fixed effect models and compared them with the ordinary linear regression models. 
 
-The packages we use in R are basic R, **lfe** and **plm**. The package we use in STATA is **glm**, and two different commands, **class** or **absorb**, are both showed. In STATA, we use the packages **areg**, **xtreg**, and **reghdfe** to do the regression.
+The packages we use in R are basic R, **lfe** and **plm**. The package we use in STATA is **glm**, and two different commands **class** and **absorb** are both showed. In STATA, we use the packages **areg**, **xtreg**, and **reghdfe** to do the regression.
 
 The dataset **Cigar** is a built-in dataset in the **plm** package in R. It is clean enough for us to do the data analysis directly.
 
