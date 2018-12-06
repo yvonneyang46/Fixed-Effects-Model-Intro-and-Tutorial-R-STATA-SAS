@@ -57,7 +57,7 @@ $\alpha _{i}$ is the unobserved time-invariant individual effect.
 
 $\mu_{it}$ is the error term.
 
-
+### Overview
 
 ### Example Dataset: Cigar 
 
@@ -358,7 +358,7 @@ When computing fixed effects models estimates, we should choose to absorb them o
 
 **Wikipedia:** [Fixed effects model](https://en.wikipedia.org/wiki/Fixed_effects_model/)
 
-**Dataset Cigar** [Cigar](http://www-eio.upc.edu/~pau/cms/rdata/csv/Ecdat/Cigar.csv)
+**Dataset:** [Cigar](http://www-eio.upc.edu/~pau/cms/rdata/csv/Ecdat/Cigar.csv)
 
 **R Package:** [plm](https://cran.r-project.org/web/packages/plm/)
 
