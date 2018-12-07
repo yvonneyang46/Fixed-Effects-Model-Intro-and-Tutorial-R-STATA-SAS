@@ -172,7 +172,7 @@ ols = lm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar)
 summary(ols)
 ```
 
-From the summary above, we see that the coefficient for *price_adj*, *pop*, *pop16* and *income_adj* are -1.247e+00, 1.040e-02, -1.495e-02,  5.278e-03 respectively.
+From the summary above, we see that the coefficient of *price_adj*, *pop*, *pop16* and *income_adj* are -1.247e+00, 1.040e-02, -1.495e-02,  5.278e-03 respectively.
 
 #### Fixed Effects Models {.tabset}
 
