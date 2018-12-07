@@ -28,15 +28,13 @@ Futhermore, the assumption of fixed effect is that the group-specific effects ar
 
 Thus, in the fixed effect models, if the heterogeneity is fixed over time, this unobserved heterogeneity can be controlled. This heterogeneity is removable from the data by differencing, for instance, any time invariant components of the model can be taken away by taking a first difference.
 
-
 #### Panel Data
 
 In this tutorial, we will focus on fixed effects model with panel data. 
 
-Panel data (also known as longitudinal or cross-sectional time-series data) is a dataset in which the behavior of entities
-are observed across time. The entities could be states, companies, individuals, countries, etc.
+Panel data (also known as longitudinal or cross-sectional time-series data) is a dataset, where the behavior of entities are observed across time. The possible entities could be states, companies, individuals, countries, etc.
 
-In panel data, fixed effects represent the group-specific means. In panel data analysis the term fixed effects estimator is used to refer to an estimator for the coefficients in the regression model including those fixed effects (one time-invariant intercept for each subject).
+In panel data, fixed effects stand for the subject-specific means. In panel data analysis, fixed effects estimator is referred to an estimator for the coefficients in the regression model including those fixed effects , in other words, one time-invariant intercept for each subject.
 
 
 #### Classical Representation
@@ -115,6 +113,7 @@ The varaibles used for regression and fixed effect model:
 
 #### Why Fixed Effects Models
 
+Heterogeneity in fixed effects models means different means among categories such as *states* and *years*. When the data can be grouped by such categories, and there are also some evidences indicating heterogeneity, the OLS is not sufficient to control the effects of these unobservable factors. However, fixed effects models can control and estimate these effects. Moreover, if these unobservable factors are time-invariant, then omitted variable bias can be eliminated by fixed effects regression. 
 
 ##### Heterogeneity across year 
 
@@ -126,6 +125,7 @@ plotmeans(sales~ year, main="Heterogeneity across year", data=Cigar,n.label = FA
 
 ```
 
+The above graph shows that the means of *sales* for distinct *year* are different.
 
 ##### Heterogeneity across state
 
@@ -134,9 +134,7 @@ plotmeans(sales~ state, main="Heterogeneity across state", data=Cigar,n.label = 
 detach("package:gplots")
 detach("package:foreign")
 ```
-
-
-So Fixed Effects Models help to control these heterogeneities.
+We can also observe heterogeneity across *state* from the above graph. So fixed effects models is used.
 
 ### Tutorial in R {.tabset}
 
@@ -215,7 +213,8 @@ plm_md = plm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar,
 summary(plm_md)
 ```
 
-From the summaries, we see that the coefficients of *price_adj*, *pop*, *pop16* and *income_adj* change after adding *state* and *year* as fixed effects. The most obvious change is that the coefficient of *income_adj* flips sign. It changes from 5.278e-03 to 2.321e-03. The coefficents of *price_adj*, *pop*, *pop16* are -1.475e+00, 1.908e-03, -2.180e-03 respectively.
+##### Summary
+From the summaries, we see that the coefficients of *price_adj*, *pop*, *pop16* and *income_adj* change after adding *state* and *year* as fixed effects. The most obvious change is that the coefficient of *income_adj* flips sign. It changes from 5.278e-03 to 2.321e-03. The coefficents of *price_adj*, *pop*, *pop16* are -1.475e+00, 1.908e-03, -2.180e-03 respectively. In addition, the variables *pop* and *pop16* are changed to be insignificant in the fixed effects models.
 
 ### Tutorial in SAS {.tabset}
 
@@ -225,6 +224,7 @@ From the summaries, we see that the coefficients of *price_adj*, *pop*, *pop16* 
 Import the data:
 
 ```{r sas_1,eval=FALSE}
+/* read the data file  */
 proc import datafile=".\Cigar.csv" 
 out=mydata dbms=csv replace; 
 getnames=yes; 
@@ -235,7 +235,7 @@ Transform the variables:
 
 ```{r sas_2, eval=FALSE}
 
-# /*change the price, and income with cpi to get the dollar value in 1983 */
+/*change the price, and income with cpi to get the dollar value in 1983 */
 data Cigar; set mydata;
 price_adj = (price/cpi)*100;
 income_adj = (ndi/cpi)*100;
@@ -268,6 +268,8 @@ We only show the estimated coefficients of independent variables and first five 
 For convenience, we only show the estimated coefficients of independent variables and first five estimated effects for years. But in fact, in SAS, individual fixed effects estimates for every *state* and every *year* will be displayed. 
 
 ```{r sas_4, eval=FALSE}
+/* Fixed effects by class, generating a set of dummy variables */
+/* for each level of the variable state and year               */
 proc glm data=Cigar;
  class year state; 
  model sales = price_adj pop pop16 income_adj year state/ solution; run;
@@ -280,6 +282,7 @@ quit;
 In SAS, as we absorb the variable *state*, only individual fixed effects estimates for every *year* will be displayed. And we only show the first five estimated effects for years.
 
 ```{r sas_5, eval=FALSE}
+/* Absorbing the variable *state* and generating dummies of years */
 proc glm data=Cigar;
  absorb state; 
  class year;
@@ -287,6 +290,14 @@ proc glm data=Cigar;
 quit;
 ```
 ![](sas_abs.png)
+
+##### Summary
+
+The estimates of the independent variables *price_adj*, *pop*, *pop16*, *income_adj* are the same as the R. 
+
+We will find the estimates for years are different from those in R. This is because that R will automatically treat one level of the factors as the reference levels, in this case, the reference levels are *year 63* or *state 1*, and incorporating them into the estimated intercept. While SAS has no such process. 
+
+Though some differences are watched, by simple calculations the estimates are the same. 
 
 
 ### Tutorial in STATA {.tabset}
@@ -327,6 +338,7 @@ If we just want to control for fix effect and only care about another coefficien
 
 #####  Command **areg**:
 ```{r stata_4,eval=FALSE}
+## Absorbing the variable state and generating dummies of years
 areg sales price_adj pop pop16 income_adj i.year, absorb(state) 
 ```
 ![](stata_areg.png)
@@ -334,6 +346,7 @@ areg sales price_adj pop pop16 income_adj i.year, absorb(state)
 
 ##### Command **xtreg**:
 ```{r stata_5,eval=FALSE}
+## Absorbing the variable state and generating dummies of years
 xtset state year
 xtreg sales price_adj pop pop16 income_adj i.year, fe 
 ```
@@ -344,6 +357,7 @@ xtreg sales price_adj pop pop16 income_adj i.year, fe
 install packages:
 
 ```{r stata_6, eval=FALSE}
+## install reghdfe packages, and also ftools
 ssc install reghdfe
 ssc install ftools
 ```
@@ -351,25 +365,35 @@ ssc install ftools
 regression: 
 
 ```{r stata_7, eval=FALSE}
+## Absorbing the variables state and year using reghdfe
 reghdfe sales price_adj pop pop16 income_adj, absorb(state year)
 ```
 ![](stata_reg.png)
 
+##### Summary
 
-### Summary and Discussion
+The estimates of the independent variables *price_adj*, *pop*, *pop16*, *income_adj* are the same as the R and the SAS. 
+
+Same as R, STATA will also take *year 63* and *state 1* by default as reference levels. So the estimated effects for years equal to those of R. As STATA absorbs variables, the estimated intercepts are different. But in fact the models are the same.
+
+### Discussion and Summary
 
 
 #### Compare Fixed Effects Model to OLS 
 
-With fixed effect, the negative effect of *price* on *sales* is stronger in magnitude than the OLS, and the coefficient on *income* flips sign. It highlights the importance of controlling for fix effect.
+The results of the OLS and the fixed effects model are extremely different. To be more specific, with fixed effect the negative effect of *price* on *sales* is stronger in magnitude than the OLS, and the coefficient on *income* flips sign. 
+
+#### Importance of Fixed Effects Model
+
+If we fit OLS instead of fixed effects, we will underestimates the effects of *price* on *sales* of cigarette, and even have wrong conclusion for the influence of *income* on *sales*. So it highlights the importance of controlling for fix effect. 
 
 #### Absorption or Not
 
-When computing fixed effects models estimates, we should choose to absorb them or not. It depends on what our aim is. Absorption is computationally fast, and looks concisely, however, individual fixed effects estimates will not be showed. So to get individual fixed effects estimates, the preferred method is the way that will automatically generate a set of dummy variables for each level of the fixed effects variable.
+When computing fixed effects models estimates, we should choose to absorb them or not. It depends on what our aim is. Absorption is computationally fast, and looks concisely, however, individual fixed effects estimates will not be showed. So to get individual fixed effects estimates, the preferred method is "no absorption", which will automatically generate a set of dummy variables for each level of the fixed effects variable.
 
 ### References
 
-**Wikipedia:** [Fixed effects model](https://en.wikipedia.org/wiki/Fixed_effects_model/)
+**Wikipedia:** [Fixed effects model](https://en.wikipedia.org/wiki/Fixed_effects_model)
 
 **Dataset:** [Cigar](http://www-eio.upc.edu/~pau/cms/rdata/csv/Ecdat/Cigar.csv)
 
