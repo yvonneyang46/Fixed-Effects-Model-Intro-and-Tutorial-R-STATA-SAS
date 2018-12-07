@@ -134,6 +134,8 @@ plotmeans(sales~ state, main="Heterogeneity across state", data=Cigar,n.label = 
 detach("package:gplots")
 detach("package:foreign")
 ```
+
+
 We can also observe heterogeneity across *state* from the above graph. Therefore, fixed effects model is an ideal choice.
 
 ### Tutorial in R {.tabset}
