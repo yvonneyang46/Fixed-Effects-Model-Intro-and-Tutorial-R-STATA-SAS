@@ -57,7 +57,7 @@ $\mu_{it}$ is the error term.
 
 ### Overview
 
-In this tutorial, we will use R, SAS and STATA to fit the fixed effect models and compared them with the ordinary linear regression models. 
+In this tutorial, we will use R, SAS and STATA to fit fixed effect models and compared them with ordinary linear regression models. 
 
 The packages we use in R are basic R, **lfe** and **plm**. The package we use in STATA is **glm**, and two different commands **class** and **absorb** are both showed. In STATA, we use the packages **areg**, **xtreg**, and **reghdfe** to do the regression.
 
@@ -134,7 +134,7 @@ plotmeans(sales~ state, main="Heterogeneity across state", data=Cigar,n.label = 
 detach("package:gplots")
 detach("package:foreign")
 ```
-We can also observe heterogeneity across *state* from the above graph. Therefore, fixed effects models is used.
+We can also observe heterogeneity across *state* from the above graph. Therefore, fixed effects model is an ideal choice.
 
 ### Tutorial in R {.tabset}
 
