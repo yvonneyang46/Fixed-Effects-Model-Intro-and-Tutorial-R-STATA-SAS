@@ -24,7 +24,7 @@ In statistics, a model that has fixed parameters or non-random quantities is cal
 
 In general, based on some observed factors, data can be divided into groups. The group means could be assumed as constant or non-constant across groups. And in a fixed effects model, just as its name implies, each group mean is a specifically fixed quantity.
 
-Futhermore, the assumption of fixed effect is that the group-specific effects are correlated with the independent variables. 
+Furthermore, the assumption of fixed effect is that the group-specific effects are correlated with the independent variables. 
 
 Thus, in the fixed effect models, if the heterogeneity is fixed over time, this unobserved heterogeneity can be controlled. This heterogeneity is removable from the data by differencing, for instance, any time invariant components of the model can be taken away by taking a first difference.
 
@@ -32,9 +32,9 @@ Thus, in the fixed effect models, if the heterogeneity is fixed over time, this 
 
 In this tutorial, we will focus on fixed effects model with panel data. 
 
-Panel data (also known as longitudinal or cross-sectional time-series data) is a dataset, where the behavior of entities are observed across time. The possible entities could be states, companies, individuals, countries, etc.
+Panel data (also known as longitudinal or cross-sectional time-series data) is a dataset, where the behavior of entities is observed across time. The possible entities could be states, companies, individuals, countries, etc.
 
-In panel data, fixed effects stand for the subject-specific means. In panel data analysis, fixed effects estimator is referred to an estimator for the coefficients in the regression model including those fixed effects , in other words, one time-invariant intercept for each subject.
+In panel data, fixed effects stand for the subject-specific means. In panel data analysis, fixed effects estimator is referred to an estimator for the coefficients in the regression model including those fixed effects, in other words, one time-invariant intercept for each subject.
 
 
 #### Classical Representation
@@ -47,7 +47,7 @@ Where:
 
 $y_{it}$ is the dependent variable observed for individual i at time t.
 
-$X_{it}$ is the time-variant $T\times k$ (the number of independent variables) regressor matrix.
+$X_{it}$ is the time-variant $T\times k$ (the number of independent variables) regression matrix.
 
 $\beta$ is the $k\times 1$ matrix of parameters.
 
@@ -134,7 +134,7 @@ plotmeans(sales~ state, main="Heterogeneity across state", data=Cigar,n.label = 
 detach("package:gplots")
 detach("package:foreign")
 ```
-We can also observe heterogeneity across *state* from the above graph. So fixed effects models is used.
+We can also observe heterogeneity across *state* from the above graph. Therefore, fixed effects models is used.
 
 ### Tutorial in R {.tabset}
 
@@ -170,7 +170,7 @@ ols = lm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar)
 summary(ols)
 ```
 
-From the summary above, we see that the coefficient of *price_adj*, *pop*, *pop16* and *income_adj* are -1.247e+00, 1.040e-02, -1.495e-02,  5.278e-03 respectively.
+From the summary above, we see that the coefficient of *price_adj*, *pop*, *pop16* and *income_adj* are -1.247e+00, 1.040e-02, -1.495e-02, 5.278e-03 respectively.
 
 #### Fixed Effects Models {.tabset}
 
@@ -259,13 +259,13 @@ In SAS, the **glm** is to fit with fixed effects models. In **glm**, we can eith
 
 If we want to see the fixed effects estimates for every *state* and every *year*, **class** will be the first choice. The **class** will automatically generate a set of dummy variables for each level of the variable *state* and *year*.
 
-It we only want to know the estimates of our interested independent variables, we can use **absorb** instead of **class**. But it can only absorb one variable at a time. And to use the **absorb**, we need to supress the intercept to avoid a dummy variable trap.
+It we only want to know the estimates of our interested independent variables, we can use **absorb** instead of **class**. But it can only absorb one variable at a time. And to use the **absorb**, we need to suppress the intercept to avoid a dummy variable trap.
 
 We only show the estimated coefficients of independent variables and first five estimated effects for years.
 
 ##### Use **class**:
 
-For convenience, we only show the estimated coefficients of independent variables and first five estimated effects for years. But in fact, in SAS, individual fixed effects estimates for every *state* and every *year* will be displayed. 
+For convenience, we only show the estimated coefficients of independent variables and first five estimated effects for years. But in fact, in SAS, individual fixed effects estimate for every *state* and every *year* will be displayed. 
 
 ```{r sas_4, eval=FALSE}
 /* Fixed effects by class, generating a set of dummy variables */
@@ -279,7 +279,7 @@ quit;
 
 ##### Use **absorb**:
 
-In SAS, as we absorb the variable *state*, only individual fixed effects estimates for every *year* will be displayed. And we only show the first five estimated effects for years.
+In SAS, as we absorb the variable *state*, only individual fixed effects estimate for every *year* will be displayed. And we only show the first five estimated effects for years.
 
 ```{r sas_5, eval=FALSE}
 /* Absorbing the variable *state* and generating dummies of years */
@@ -334,7 +334,7 @@ There are three ways to do with STATA, using the commands **areg**, **xtreg**, o
 
 The **areg** and **xtreg** cannot absorb more than one fix effect, but we can still put factor variable i.var in. Sometimes, they are computationally inefficient since they actually calculate and report coefficients for those dummy variables. However, in some cases they could be helpful if we want to see the effect of one specific group. 
 
-If we just want to control for fix effect and only care about another coefficients of interests, **reghdfe** is the best option.
+If we just want to control for fix effect and only care about other coefficients of interests, **reghdfe** is the best option.
 
 #####  Command **areg**:
 ```{r stata_4,eval=FALSE}
@@ -374,7 +374,7 @@ reghdfe sales price_adj pop pop16 income_adj, absorb(state year)
 
 The estimates of the independent variables *price_adj*, *pop*, *pop16*, *income_adj* are the same as the R and the SAS. 
 
-Same as R, STATA will also take *year 63* and *state 1* by default as reference levels. So the estimated effects for years equal to those of R. As STATA absorbs variables, the estimated intercepts are different. But in fact the models are the same.
+Same as R, STATA will also take *year 63* and *state 1* by default as reference levels. So, the estimated effects for years equal to those of R. As STATA absorbs variables, the estimated intercepts are different. But in fact, the models are the same.
 
 ### Discussion and Summary
 
@@ -385,11 +385,11 @@ The results of the OLS and the fixed effects model are extremely different. To b
 
 #### Importance of Fixed Effects Model
 
-If we fit OLS instead of fixed effects, we will underestimates the effects of *price* on *sales* of cigarette, and even have wrong conclusion for the influence of *income* on *sales*. So it highlights the importance of controlling for fix effect. 
+If we fit OLS instead of fixed effects, we will underestimate the effects of *price* on *sales* of cigarette, and even have wrong conclusion for the influence of *income* on *sales*. So, it highlights the importance of controlling for fix effect. 
 
 #### Absorption or Not
 
-When computing fixed effects models estimates, we should choose to absorb them or not. It depends on what our aim is. Absorption is computationally fast, and looks concisely, however, individual fixed effects estimates will not be showed. So to get individual fixed effects estimates, the preferred method is "no absorption", which will automatically generate a set of dummy variables for each level of the fixed effects variable.
+When computing fixed effects models estimates, we should choose to absorb them or not. It depends on what our aim is. Absorption is computationally fast, and looks concisely, however, individual fixed effects estimates will not be showed. In order to get every individual fixed effects estimates, the preferred method is "no absorption", which will automatically generate a set of dummy variables for each level of the fixed effects variable.
 
 ### References
 
