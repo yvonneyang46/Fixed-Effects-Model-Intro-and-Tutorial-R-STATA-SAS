@@ -215,6 +215,7 @@ plm_md = plm(sales ~ price_adj + pop + pop16 + income_adj, data = Cigar,
 summary(plm_md)
 ```
 
+From the summaries, we see that the coefficients of *price_adj*, *pop*, *pop16* and *income_adj* change after adding *state* and *year* as fixed effects. The most obvious change is that the coefficient of *income_adj* flips sign. It changes from 5.278e-03 to 2.321e-03. The coefficents of *price_adj*, *pop*, *pop16* are -1.475e+00, 1.908e-03, -2.180e-03 respectively.
 
 ### Tutorial in SAS {.tabset}
 
