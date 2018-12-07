@@ -297,7 +297,7 @@ quit;
 
 The estimates of the independent variables *price_adj*, *pop*, *pop16*, *income_adj* are the same as the R. 
 
-We will find the estimates for years are different from those in R. This is because that R will automatically treat one level of the factors as the reference levels, in this case, the reference levels are *year 63* or *state 1*, and incorporating them into the estimated intercept. While SAS has no such process. 
+We will find the estimates for years are different from those in R. This is because that R will automatically treat one level of the factors as the reference levels, in this case, the reference levels are *year 63* or *state 1*, and incorporating them into the estimated intercept. But SAS has no such process. 
 
 Though some differences are watched, by simple calculations the estimates are the same. 
 
